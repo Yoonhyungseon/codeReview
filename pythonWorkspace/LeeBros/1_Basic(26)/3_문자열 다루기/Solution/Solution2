@@ -1,0 +1,107 @@
+Intuition
+입력 문자열의 각 문자를 시작점으로 하여 한글자씩 늘려나갔을 때 목적 문자열을 만들 수 있는지 여부를 확인합니다.
+
+Algorithm
+입력 문자열의 각 문자를 시작점으로 하여 탐색을 할 때, 한 문자라도 매칭이 되지 않는다면 입력 문자열의 다음 문자를 시작점으로 하여 탐색해줍니다.
+
+다음 예시는 i를 입력 문자열의 시작점이라 했을 때의 모습입니다. 첫 번째 문자를 시작점으로 했을 때는 일치하지 않지만, 두 번째 문자를 시작점으로 했을 때는 일치함을 확인할 수 있습니다.
+images/2021-02-16-04-50-36.png
+images/2021-02-16-04-50-49.png
+
+
+
+
+만약 입력 문자열의 시작점으로 잡은 나머지 문자열의 길이가 목적 문자열보다 짧다면 이는 정답이 될 수 없기 때문에 탐색하지 않아도 됩니다. 따라서 답이 될 가능성이 있는 시작점, 즉 시작점을 기준으로 한 나머지 문자열의 길이가 목적 문자열이 같거나 긴 경우에만 탐색을 해줍니다.
+images/2021-02-16-04-51-55.png
+
+import sys
+
+input_str = input()
+target_str = input()
+
+
+# input_str의 s_idx1에서 e_idx1 까지의 문자열과
+# output_str의 s_idx2에서 e_idx2 까지의 문자열과 일치하는지를 비교합니다.
+def is_match(s_idx1, e_idx1, s_idx2, e_idx2):
+    for i, j in zip(range(s_idx1, e_idx1 + 1), range(s_idx2, e_idx2 + 1)):
+        if input_str[i] != target_str[j]:
+            return False
+    
+    return True
+
+
+input_len, target_len = len(input_str), len(target_str)
+
+# 입력 문자열의 각 문자를 시작점으로 하여 목적 문자열을 만들 수 있는지 확인합니다.
+for i in range(input_len):
+    # input_str의 i 부터 i + target_len - 1까지의 원소가
+    # target_len의 0부터 target_len - 1 까지의 원소와
+    # 정확히 일치하는지 확인합니다.
+
+    # 만약 input_str의 끝 원소인 i + target_len - 1 번째가
+    # 존재하지 않는다면 비교를 하지 않습니다.
+    if i + target_len - 1 >= input_len:
+        continue
+    
+    if is_match(i, i + target_len - 1, 0, target_len - 1):
+         # 모든 문자에 대하여 매칭이 된 경우:
+        print(i)
+        sys.exit(0)
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+string input_str, target_str;
+
+// input_str의 s_idx1에서 e_idx1 까지의 문자열과
+// output_str의 s_idx2에서 e_idx2 까지의 문자열과 일치하는지를 비교합니다.
+bool IsMatch(int s_idx1, int e_idx1, int s_idx2, int e_idx2) {
+    for(int i = s_idx1, j = s_idx2; i <= e_idx1 && j <= e_idx2; 
+													  i++, j++) {
+        if(input_str[i] != target_str[j])
+            return false;
+    }
+    
+    return true;
+}
+
+int main() {
+    cin >> input_str >> target_str;
+
+    int input_len = input_str.size();
+    int target_len = target_str.size();
+
+    // 입력 문자열의 각 문자를 시작점으로 하여 목적 문자열을 만들 수 있는지 확인합니다.
+    for(int i = 0; i < input_len; i++) {
+        // input_str의 i 부터 i + target_len - 1까지의 원소가
+        // target_len의 0부터 target_len - 1 까지의 원소와
+		// 정확히 일치하는지 확인합니다.
+        
+        // 만약 input_str의 끝 원소인 i + target_len - 1 번째가
+		// 존재하지 않는다면 비교를 하지 않습니다.
+        if(i + target_len - 1 >= input_len)
+            continue;
+        
+        if(IsMatch(i, i + target_len - 1, 0, target_len - 1)) {
+            // 모든 문자에 대하여 매칭이 된 경우:
+            cout << i;
+            return 0;
+        }
+    }
+
+    // 매칭이 되지 않는 경우:
+    cout << -1;
+    return 0;
+}
+
+# 매칭이 되지 않는 경우:
+print(-1)
+
+
+Complexity Analysis
+Time Complexity : O(MN)
+
+Memory Complexity : O(M + N)

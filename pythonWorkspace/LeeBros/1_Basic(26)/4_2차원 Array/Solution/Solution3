@@ -1,0 +1,259 @@
+Intuition
+각 대각선의 시작점의 위치와 각 대각선마다 숫자 적는 행위를 멈춰야 할 조건을 구한다면, n*m 크기의 배열에 원하는 규칙대로 숫자를 적어내려갈 수 있습니다.
+
+Algorithm
+대각선 방향으로 순회하는 것이 어떤 규칙을 갖고 있는지 파악해봅시다. 각 대각선의 시작점을 잡아 대각선 방향으로 숫자를 채워 나가는 것을 계속 반복하면 문제를 해결 할 수 있습니다.
+
+우선 대각선의 시작점이 어떠한 규칙을 갖고 변하는지 살펴보면 다음과 같습니다.
+
+step 1) 첫 번째 행에 대하여 행이 끝날 때까지 한 칸씩 오른쪽으로 이동합니다.(열 번호를 1씩 증가)
+images/2021-02-16-04-59-58.png
+
+step 2) 마지막 열에 대하여 열이 끝날 때까지 한 칸씩 아래쪽으로 이동합니다. (행 번호를 1씩 감소)
+images/2021-02-16-05-00-25.png
+
+그렇다면 시작점이 고정되었다고 했을 때, 각각의 시작점에 대하여 대각선 방향으로 숫자를 채워넣는 방법은 다음과 같습니다.
+images/2021-02-16-05-00-48.png
+
+
+case 1) 해당 위치가 직사각형 안에 포함되면 숫자를 채워넣은 뒤, 대각선 위치에 해당하는 행 번호와 열 번호로 변수를 갱신하고 숫자를 1 증가시켜줍니다. 이 때 행 번호는 1 증가하고, 열 번호는 1 감소할 때 대각선 방향으로 나아갈 수 있음을 알 수 있습니다.
+images/2021-02-16-05-01-21.png
+
+위의 방법을 더 이상 나아갈 수 없을 때 까지 반복하면 됩니다.
+images/2021-02-16-05-01-52.png
+
+# 변수 선언 및 입력
+n, m = tuple(map(int, input().split()))
+answer = [
+    [0 for _ in range(m)]
+    for _ in range(n)
+]
+count = 1
+
+
+def fill_diagonal(curr_row, curr_col):
+    global count
+    
+    while 0 <= curr_col and curr_row < n:
+        # Case 1 :
+        answer[curr_row][curr_col] = count
+        
+        # 변수 업데이트
+        curr_row += 1
+        curr_col -= 1
+        count += 1
+        
+		
+# Step 1:
+for start_col in range(m):
+    fill_diagonal(0, start_col)
+
+# Step 2:
+for start_row in range(1, n):
+    fill_diagonal(start_row, m - 1)
+
+# 출력:
+for row in range(n):
+    for col in range(m):
+        print(answer[row][col], end = ' ')
+    print()
+
+
+
+
+#include <iostream>
+
+using namespace std;
+
+// 변수 선언:
+int n, m;
+int answer[100][100] = {0};
+int count = 1;
+
+void FillDiagonal(int curr_row, int curr_col) {
+    while(curr_col >= 0 && curr_row < n) {
+        // Case 1:
+        answer[curr_row][curr_col] = count;
+
+        // 변수 업데이트 :
+        curr_row++;
+        curr_col--;
+        count++;
+    }
+    return;
+}
+
+int main() {
+    // 입력:
+    cin >> n >> m;
+
+    // Step 1:
+    for(int start_col = 0; start_col < m; start_col++) {
+        FillDiagonal(0, start_col);
+    }
+
+    // Step 2:
+    for(int start_row = 1; start_row < n; start_row++) {
+        FillDiagonal(start_row, m - 1);
+    }
+
+    // 출력:
+    for(int row = 0; row < n; row++) {
+        for(int col = 0; col < m; col++)
+            cout << answer[row][col] << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+
+Complexity Analysis
+Time Complexity : O(NM)
+
+Memory Complexity : O(NM)
+
+
+
+
+
+
+Intuition
+규칙이 괜히 복잡해 보일 경우에는, 단순한 방식으로도 이 문제를 올바르게 풀 수는 없을지를 고민해봐야 합니다. 시작점을 꼭 두 가지 step으로 나눠 잡지 않고, 직사각형의 왼쪽 위에서부터 오른쪽 아래 방향으로 순회했을 때 비어있는 위치를 시작점으로 하는 방식으로 문제를 해결할 수 있습니다.
+
+Algorithm
+직사각형의 왼쪽 위에서부터 오른쪽 아래 방향으로 숫자를 순차적으로 적어나간다고 생각해봅시다. 이때 만약 공간이 비어있지 않다면 pass하고, 비어있다면 그 부분만 숫자를 채우는 것이 아니라 왼쪽 아래 대각선 방향으로 직사각형을 벗어나지 않을때까지 숫자를 적습니다. 이 과정을 순차적으로 반복해도 이 문제를 해결할 수 있습니다.
+
+step 1) 직사각형을 왼쪽 위에서부터 오른쪽 아래 방향으로 순회합니다.
+images/2021-02-16-05-02-59.png
+
+step 2) 혹시 비어있다면, 그 지점을 시작으로 대각선 방향으로 숫자를 채우는 것을 시작합니다.
+images/2021-02-16-05-03-28.png
+
+예를 들어, 위의 그림에서 진행되는 과정을 살펴봅시다.
+처음에 시작점이 (0, 0)으로 잡힙니다.
+images/2021-02-16-05-03-53.png
+
+
+
+그 이후 시작점이 (0, 1)로 잡힙니다.
+images/2021-02-16-05-04-21.png
+
+
+계속 반복하다 보면 (0, m-1)을 시작점으로 잡게 됩니다.
+images/2021-02-16-05-04-52.png
+
+
+그 다음에는 순서대로 보면서 비어있는 칸을 잡아야 하므로, 그 이후에 잡히는 시작점은 (1, m-1)이 됩니다.
+images/2021-02-16-05-05-11.png
+
+
+이 과정을 (n-1, m-1) 위치까지 반복하면 됩니다.
+
+
+# 변수 선언 및 입력
+n, m = tuple(map(int, input().split()))
+answer = [
+    [0 for j in range(m)]
+    for i in range(n)
+]
+count = 1
+
+
+def fill_diagonal(curr_row, curr_col):
+    global count
+    
+    while 0 <= curr_col and curr_row < n:
+        # Case 1 :
+        answer[curr_row][curr_col] = count
+        
+        # 변수 업데이트
+        curr_row += 1
+        curr_col -= 1
+        count += 1
+        
+
+# Step 1:
+for row in range(n):
+    for col in range(m):
+        if answer[row][col] == 0:
+            fill_diagonal(row, col)
+
+# 출력:
+for row in range(n):
+    for col in range(m):
+        print(answer[row][col], end = ' ')
+    print()
+
+
+#include <iostream>
+
+using namespace std;
+
+// 변수 선언:
+int n, m;
+int answer[100][100] = {};
+int count = 1;
+
+void FillDiagonal(int curr_row, int curr_col) {
+    while(curr_col >= 0 && curr_row < n) {
+        // Case 1:
+        answer[curr_row][curr_col] = count;
+
+        // 변수 업데이트 :
+        curr_row++;
+        curr_col--;
+        count++;
+    }
+    return;
+}
+
+int main() {
+    // 입력:
+    cin >> n >> m;
+
+    // Step 1:
+    for(int row = 0; row < n; row++) {
+        for(int col = 0; col < m; col++) 
+            // Step 2:
+            if(answer[row][col] == 0)
+                FillDiagonal(row, col);
+    }
+
+    // 출력:
+    for(int row = 0; row < n; row++) {
+        for(int col = 0; col < m; col++)
+            cout << answer[row][col] << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(NM)
+
+Memory Complexity : O(NM)
+
+
+
+Solution2 방법의 시간복잡도는 어떻게 될까요?
+
+// Step 1:
+    for(int row = 0; row < n; row++) {
+        for(int col = 0; col < m; col++) 
+            // Step 2:
+            if(answer[row][col] == 0)
+                FillDiagonal(row, col);
+    }
+이중포문 때문에 O(nm)
+
+대각선을 채우는 FillDiagonal 함수는 최대 min(n, m)개까지 적힐 수 있기 때문에 O(min(n, m))
+
+두 코드가 겹쳐 있으므로 이 문제의 시간복잡도를 O(nm * min(n, m))라고 착각하기 쉬운데요,
+
+실제 이 방법의 시간복잡도는 O(nm)입니다.
+
+if(answer[row][col] == 0) 이 코드가 핵심인데요, 비어있지 않을때는 대각선 방향으로 숫자를 적는 작업을 하지 않기 때문에 섣불리 두 시간복잡도의 곱으로 표현된다는 판단을 해서는 안됩니다.
+
+이런 문제의 경우, 코드를 멀리서 바라보면 “비어있는 곳을 찾아 그 위치에 숫자를 정확히 한 번씩만 적어 주는 코드”라 볼 수 있기 때문에 직사각형 크기에 해당하는 만큼만 유효한 코드가 수행되므로 시간복잡도는 O(nm)이 됩니다.

@@ -1,0 +1,60 @@
+Intuition
+반복문과 나머지 연산자를 사용하여 주어진 범위 내의 각각의 숫자의 약수들의 합을 구하고, 완전수인지 판단하여 그 개수를 구합니다.
+
+Algorithm
+start부터 end까지의 정수를 순회하며 각 숫자의 약수의 합을 계산합니다.
+
+step 1) 특정 숫자 n의 (자기 자신을 제외한) 약수의 합을 알아내기 위해 1부터 n-1 까지의 숫자들로 n을 나눠보며 나머지가 0인 수들의 합을 계산합니다.
+
+case 1) 약수의 합이 n이면 정답 개수를 1 증가 시켜줍니다.
+
+# 변수 선언 및 입력:
+
+start, end = tuple(map(int, input().split()))
+ans = 0
+
+for curr_num in range(start, end + 1):
+    # Step 1:
+    divisor_sum = 0
+    for divisor in range(1, curr_num):
+        if curr_num % divisor == 0:
+            divisor_sum += divisor
+
+    # Case 1:
+    if divisor_sum == curr_num:
+        ans += 1
+
+print(ans)
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    int start, end;
+    int answer_cnt = 0;
+    cin >> start >> end;
+
+    for(int curr_num = start; curr_num <= end; curr_num++) {
+        // Step 1:
+        int divisor_sum = 0;
+        for(int divisor = 1; divisor <= curr_num-1; divisor++){
+            if(curr_num % divisor == 0){
+                divisor_sum += divisor;
+            }
+        }
+        // Case 1:
+        if(divisor_sum == curr_num){
+            answer_cnt++;
+        }
+    }
+
+    cout << answer_cnt;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(1)

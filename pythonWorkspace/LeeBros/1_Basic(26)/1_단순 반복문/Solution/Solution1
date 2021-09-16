@@ -1,0 +1,61 @@
+Intuition
+반복되는 부분을 찾아야 합니다.
+
+Algorithm
+19단을 출력할 때 곱해질 첫 번째 수를 first, 두 번째 수를 second라고 해봅시다.
+
+19단을 출력하기 위해서는 이중 for문을 사용하여 출력하되, 아래에 해당하는 각 케이스에 맞게 출력해주면 됩니다.
+
+second가 홀수인 경우 예시: “1 * 1 = 1”
+
+second가 짝수인 경우 예시 : “ / 1 * 2 = 2\n”
+
+second == 19인 경우 : “\n”
+
+단, \n은 new line을 의미합니다.
+
+n = 19
+
+for first in range(1, n + 1):
+    for second in range(1, n + 1):
+        if second % 2 == 1:
+            # Case 1:
+            print(first, "*", second, "=", first * second, end="")
+        else:
+            # Case 2:
+            print(" /", first, "*", second, "=", first * second)
+        
+        if second == 19:
+            # Case 3:
+            print()
+
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    for(int first = 1; first <= 19; first++) {
+        for(int second= 1 ; second <= 19; second++) {
+            if(second % 2 == 1) {
+                // Case 1:
+                cout << first << " * " << second << " = " << first * second;
+            }
+            else {
+                // Case 2:
+                cout << " / " << first << " * " << second << " = " << first * second << endl;
+            }
+
+            if(second == 19) {
+                // Case 3:
+                cout << endl;
+            }
+        }
+    }
+    return 0;
+}
+
+Complexity Analysis
+Time Complexity : O(1)
+
+Memory Complexity : O(1)

@@ -1,0 +1,68 @@
+Intuition
+원점과 어떤 점 (x, y)사이의 거리는 |x| + |y| 입니다. 정렬할 때 구체적인 x, y 값은 필요하지 않고 그 점과 원점 사이의 거리만 필요하다는 사실을 적용하면 1차원 숫자 배열을 정렬하는 문제와 같습니다.
+
+Algorithm
+N개의 점을 하나씩 입력받을 때 마다 (각각의 점과 원점 사이의 거리, 인덱스)를 리스트에 저장합니다.
+
+배열을 정렬하면 첫 번째 값을 기준으로 정렬하게 되고, 정렬 후 각 인덱스를 차례대로 출력합니다.
+
+# 변수 선언 및 입력:
+n = int(input())
+distances = list()
+
+
+# 원점과의 거리를 계산하는 함수입니다.
+def get_dist_from_origin(x, y):
+    return abs(x) + abs(y)
+
+
+for i in range(n):
+    x, y = tuple(map(int, input().split()))
+    # 원점과의 거리와 index를 저장합니다.
+    distances.append((
+        get_dist_from_origin(x, y), i + 1
+    ))
+
+distances.sort()
+
+for _, idx in distances:
+    print(idx)
+
+
+
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+// 원점과의 거리를 계산하는 함수입니다.
+int GetDistFromOrigin(int x, int y) {
+    return abs(x) + abs(y);
+}
+
+int main(){
+    int n;
+    cin >> n;
+
+    vector<pair<int, int> > distances;
+    int x, y;
+    for(int i = 0; i < n; i++) {
+        cin >> x >> y;
+        // 원점과의 거리와 index를 저장합니다.
+        distances.push_back(make_pair(GetDistFromOrigin(x, y), i + 1));
+    }
+
+    sort(distances.begin(), distances.end());
+
+    for(int i = 0; i < n; i++)
+        cout << distances[i].second << endl;
+
+    return 0;
+}
+
+Complexity Analysis
+Time Complexity : O(NlgN)
+
+Memory Complexity : O(N)s

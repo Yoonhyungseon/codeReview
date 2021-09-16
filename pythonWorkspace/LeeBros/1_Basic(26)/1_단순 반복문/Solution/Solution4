@@ -1,0 +1,105 @@
+Intuition
+입력의 일의 자리를 분리하여 그 숫자를 결과로 출력할 숫자 뒤에 순차적으로 붙여나갑니다.
+
+Algorithm
+1234 라는 숫자를 예로 생각 해봅시다. 먼저, 마지막 숫자 4와 그 앞의 숫자들 123을 분리하기 위해 10으로 나눈 몫과 나머지를 사용합니다.
+
+이제 123과 4라는 숫자를 얻었습니다. 이제 123의 일의자리 3을 떼어 4 뒤에 붙여 43을 만들어야합니다. 이는 어떻게 할 수 있을까요?
+
+123을 마찬가지로 10으로 나눈 몫과 나머지로 분리해 12와 3을 얻습니다. 이제, 얻어낸 숫자(3)을 가지고 있는 숫자(4) 뒤에 붙여야합니다. 이를 위해 가지고 있던 숫자(4)에 10을 곱한 후, 얻어낸 숫자(3)을 더해줍니다. 예를 들어 43이라는 숫자 뒤에 2를 붙이는 과정은 아래와 같습니다.
+
+이처럼 일의 자리를 떼어붙이는 작업을 반복하면 거꾸로 뒤집어진 숫자를 얻을 수 있습니다.
+
+
+# 변수 선언 및 입력:
+num = int(input())
+
+# 입력의 일의 자리부터 분리하여 새로운 수의 뒤에 붙여줍니다.
+answer = 0
+while num > 0:
+    # 일의 자리 숫자를 결과의 뒤에 붙입니다.
+    answer = answer * 10 + num % 10
+    # 사용한 일의 자리 숫자를 제거합니다.
+    num = num // 10
+
+print(answer)
+
+
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    int num;
+    cin >> num;
+
+    // 입력의 일의 자리부터 분리하여 새로운 수의 뒤에 붙여줍니다.
+    int answer = 0;
+    while(num > 0) {
+        // 일의 자리 숫자를 결과의 뒤에 붙입니다.
+        answer = answer * 10 + num % 10;
+        // 사용한 일의 자리 숫자를 제거합니다.
+        num /= 10;
+    }
+
+    cout << answer;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N)
+
+Memory Complexity : O(1)
+
+
+
+Intuition
+자연수를 문자열로 입력받아 뒤집어줍니다. 이 때 일의자리부터 등장 하는 0을 따로 제거해주어야 합니다.
+
+Algorithm
+입력 받은 문자열을 뒤집어준뒤 정수로 변환하여 출력합니다.
+
+# 변수 선언 및 입력:
+num_str = input()
+
+# 입력받은 문자열을 거꾸로 뒤집습니다.
+num_str = num_str[::-1]
+
+# 문자열을 숫자로 변환합니다.
+num_int = int(num_str)
+
+print(num_int)
+
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    string num_str;
+    cin >> num_str;
+
+    // reverse 함수는 string을 거꾸로 뒤집습니다.
+    reverse(num_str.begin(), num_str.end());
+    
+    int num_int = 0;
+    // stringstream 객체는 string을 다른 타입으로 변환하거나
+    // 다른 타입을 string으로 변환할 때 사용됩니다.
+    stringstream ssInt(num_str);
+    ssInt >> num_int;
+    
+    cout << num_int;
+    return 0;
+}
+
+
+
+Complexity Analysis
+Time Complexity : O(N)
+
+Memory Complexity : O(N)

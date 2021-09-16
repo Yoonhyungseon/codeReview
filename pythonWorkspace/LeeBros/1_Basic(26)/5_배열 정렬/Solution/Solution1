@@ -1,0 +1,48 @@
+Intuition
+주어진 숫자들을 정렬하면 k번째 원소를 구하기가 쉽습니다.
+
+Algorithm
+입력으로 숫자들을 받은 뒤, 그 수들을 sort 함수로 정렬한 후, k번째 원소를 출력합니다.
+
+# 변수 선언 및 입력:
+n, k = tuple(map(int, input().split()))
+nums = list(map(int, input().split()))
+
+# nums를 정렬합니다.
+nums.sort()
+
+# k번째 원소를 출력합니다.
+print(nums[k - 1])
+
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX_N 1000
+
+int main(){
+    // 변수 선언 및 입력:
+    int n, k;
+    cin >> n >> k;
+
+    int nums[MAX_N];
+
+    for(int i=0; i < n; i++){
+        cin >> nums[i];
+    }
+
+    // nums[0]부터 nums[n - 1]까지를 정렬함
+    sort(nums, nums + n);
+
+    // k번째 원소를 출력 (원소 k-1)
+    cout << nums[k - 1];
+
+    return 0;
+}
+
+Complexity Analysis
+Time Complexity : O(NlgN)
+
+Memory Complexity : O(N)

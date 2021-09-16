@@ -1,0 +1,127 @@
+Intuition
+두 단어에 속하는 문자들의 순서를 바꾸어 동일한 단어로 만들 수 있는 경우, 각 단어들의 문자를 정렬했을 때 같아지는 특징을 활용합니다. 예를 들어 abab와 abba를 각각 정렬하면 모두 aabb가 됩니다.
+
+Algorithm
+입력 받은 두 단어를 각각 정렬한 뒤 동일한지 여부를 확인합니다.
+
+str1 = input()
+str2 = input()
+
+# 각 문자열을 정렬했을 때 두 문자열이 일치하는지 비교합니다.
+print("Yes" if sorted(str1) == sorted(str2) else "No")
+
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    string str1;
+    string str2;
+
+    cin >> str1 >> str2;
+
+    // 각 문자열을 정렬합니다. 
+    sort(str1.begin(), str1.end());
+    sort(str2.begin(), str2.end());
+
+    if(str1.compare(str2) == 0)
+        cout << "Yes";
+    else
+        cout << "No";
+    return 0;
+}
+
+Complexity Analysis
+Time Complexity : O(NlgN)
+
+Memory Complexity : O(N)
+
+
+
+
+Intuition
+어떤 경우에 두 단어에 속하는 문자들의 순서를 바꾸어 동일한 단어로 만들려면 다음 조건을 모두 만족해야 합니다.
+
+각 단어에 속하는 문자들의 종류가 동일
+각 문자의 개수가 동일
+이러한 특성을 이용하여 각 단어를 순회하며 나타나는 각 문자의 개수가 동일한지 여부를 확인합니다.
+
+Algorithm
+문제의 조건에서 각 단어에 속하는 문자는 총 128개로 구성 되어있는 아스키 코드로 나타낼 수 있다고 하였으므로, 128 크기의 배열을 선언한 뒤 각 문자의 개수가 동일한 지를 판별하면 됩니다. 각각 별도의 배열을 선언한 뒤 비교를 해줄 수도 있지만, 하나의 배열을 선언한 뒤 첫 번째 문자열을 순회할 때는 각 문자에 대해서 1씩 추가해주고, 두 번째 문자열을 순회할 때 각 문자에 대하여 1씩 감소시켜주면 하나의 배열만 사용해도 간결하게 구현을 할 수 있습니다.
+
+images/2021-02-16-05-16-02.gif
+
+import sys
+
+ASCCI_NUM = 128
+
+str1 = input()
+str2 = input()
+
+# 0으로 초기화 된 count 배열을 정의합니다. 
+count = [
+    0 for _ in range(ASCCI_NUM)
+]
+
+# 첫 번째 문자열을 순회하며 각 문자의 개수를 세줍니다.
+for char1 in str1:
+    count[ord(char1)] += 1
+
+# 두 번째 문자열을 순회하며 각 문자의 개수를 세줍니다.
+for char2 in str2:
+    count[ord(char2)] -= 1
+
+# count 배열을 순회하면서 모든 문자의 개수가 동일한지를 확인합니다.
+for i in range(ASCCI_NUM):
+    if count[i] != 0:
+        print("No")
+        sys.exit(0)
+        
+print("Yes")
+
+
+#include <iostream>
+#include <string>
+
+#define ASCII_NUM 128
+
+using namespace std;
+
+int main() {
+    string str1, str2;
+    int count[ASCII_NUM];
+
+    cin >> str1 >> str2;
+
+    // count 배열을 0으로 초기화 해줍니다.
+    for(int i = 0; i < ASCII_NUM; i++)
+        count[i] = 0;
+
+    // 첫 번째 문자열을 순회하며 각 문자의 개수를 세줍니다. 
+    for(int i = 0; i < str1.size(); i++)
+        count[str1[i]]++;
+
+    // 두 번째 문자열을 순회하며 각 문자의 개수를 세줍니다. 
+    for(int i = 0; i < str2.size(); i++)
+        count[str2[i]]--;
+
+    // count 배열을 순회하면서 모든 문자의 개수가 동일한지를 확인합니다.
+    for(int i = 0; i < ASCII_NUM; i++)
+        if(count[i] != 0) {
+            cout << "No";
+            return 0;
+        }
+
+    cout << "Yes";
+
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N)
+
+Memory Complexity : O(N)

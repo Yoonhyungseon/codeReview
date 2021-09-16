@@ -1,0 +1,190 @@
+Intuition
+원하는 결과를 바로 출력하기보다는 정답을 저장할 별도의 이차원 배열을 활용해야 합니다. 또, 수학적인 규칙을 찾지 않고 dx dy 테크닉을 잘 활용하여 가로 막혔을 때 움직이는 방향을 시계방향으로 90' 틀어주는 방식으로 쉽게 해결할 수 있습니다.
+
+Algorithm
+문제에서 오른쪽, 아래쪽, 왼쪽, 위쪽 순서로 알파벳을 채워넣으라고 하였으므로 이를 각각 direction = 0, 1, 2, 3 이라 한다면 direction은 0, 1, 2, 3, 0, 1, 2, 3, … 을 반복하게 됩니다.
+images/2021-02-16-05-07-56.png
+
+
+이 때 각 경우에 대해서 좌표는 다음과 같이 이동합니다. (x, y가 각각 행, 열을 의미함에 유의합니다.)
+
+오른쪽 (direction = 0) : x 는 그대로, y는 1 증가,
+아래쪽 (direction = 1) : x 는 1 증가, y는 그대로,
+왼쪽 (direction = 2) : x는 그대로, y는 1 감소,
+위쪽(direction = 3) : x는 1 감소, y는 그대로
+
+images/2021-02-16-05-08-25.png
+
+따라서 현재 위치를 (currX, currY), 방향 dir를 갖고 그 다음 위치로 나아가기 위한 x, y에 대한 변화량을 dx[dir], dy[dir]라고 했을 때, 각 direction에 대하여 다음과 같이 정의하면 그 다음 위치는 (currX + dx[dir], currY + dy[dir])이 됨을 알 수 있습니다.
+
+dx[4] = { 0, +1, 0, -1}
+
+dy[4] = {+1, 0, -1, 0}
+
+images/2021-02-16-05-08-49.png
+
+같은 방향으로 계속 진행하다가 방향을 틀어야만 하는 조건은 현재 방향으로 더 갔을 때 격자를 벗어나게 되거나, 혹은 그 곳에 이미 내가 방문했던 적이 있어 알파벳이 이미 적혀있는 경우입니다.
+
+따라서 같은 방향으로 계속 진행하기 위해서는 (nextX, nextY)가 직사각형 안에 들어오면서, 그 위치에 방문한 적이 없어야만 합니다.
+images/2021-02-16-05-09-09.png
+
+
+만약 해당 조건을 만족하지 않는다면 방향을 90도 틀어줘야 합니다. 90도 시계방향으로 회전했을 때 dir값은 0, 1, 2에서는 1씩 늘어나며, 3의 경우 0이 되므로 nextDir = (currDir + 1) % 4로 간단히 계산이 가능합니다. 만약 dir을 1부터 4까지 사용했다거나, 오른쪽, 아래, 왼쪽, 위 순서가 아닌 규칙없이 방향을 나열하여 정의했다면 코드가 비교적 간단하지는 않았을 겁니다.
+
+images/2021-02-16-05-09-37.png
+
+방향을 바꾸는 것과 비슷하게 알파벳을 채울 때 A부터 Z까지 증가시키다가 다시 A로 돌아오는 코드 역시 'A' + (i % 26) 와 같은 방법으로 구현할 수 있습니다.
+
+
+# 변수 선언 및 입력
+n, m = tuple(map(int, input().split()))
+answer = [
+    [0 for _ in range(m)]
+    for _ in range(n)
+]
+visited = [
+    [0 for _ in range(m)]
+    for _ in range(n)
+]
+    
+
+def can_go(new_x, new_y):
+	# 나아가려는 위치가 직사각형 안에 들어 있는지 확인하고
+	# 들어있다면 아직 방문한적이 없는 곳인지 판단합니다.
+    if 0 <= new_x and new_x < n and \
+        0 <= new_y and new_y < m and visited[new_x][new_y] == 0:
+        return True
+    else:
+        return False
+
+
+# direction에 따라 바뀌는 (x, y)의 변화량인 dx, dy를 정의합니다.
+dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
+curr_x, curr_y = 0, 0 # 시작은 (0, 0) 입니다.
+direction = 0         # 0: 오른쪽, 1: 아래쪽, 2: 왼쪽, 3: 위쪽
+
+# 처음 시작 위치에 초기값을 적습니다.
+answer[curr_x][curr_y] = 'A'
+visited[curr_x][curr_y] = True
+
+# n*m개의 알파벳을 적어야 합니다. 
+for i in range(1, n * m): # i번째 문자를 어디에 적을지 결정합니다.
+    while True:           # 나아갈 수 있을때까지 방향을 바꿔가며 확인해봅니다. 
+        # 현재 방향 dir를 기준으로 그 다음 위치 값을 계산합니다.
+        next_x, next_y = \
+            curr_x + dxs[direction], curr_y + dys[direction]
+        # 그 위치로 나아갈 수 있는지 확인합니다.
+        if can_go(next_x, next_y):
+            # 나아갈 수 있다면 위치를 갱신해주고 배열에 올바른 값을 채워넣습니다.
+            curr_x, curr_y = next_x, next_y
+            visited[curr_x][curr_y] = True
+            answer[curr_x][curr_y] = chr((i % 26) + ord('A'))
+            break
+        else:
+            # 나아갈 수 없다면 시계방향으로 90'를 회전하여 
+			# 그 다음 방향을 확인해봐야 합니다.
+            direction = (direction + 1) % 4
+
+# 출력:
+for i in range(n):
+    for j in range(m):
+        print(answer[i][j], end = ' ')
+    print()
+
+
+
+#include <iostream>
+
+using namespace std;
+
+// 전역 변수 선언:
+// 이미 방문한적이 있다면 true / 아니라면 false로 표시합니다.
+bool visited[100][100] = {0};
+
+// 함수 선언:
+bool CanGo(int n, int m, int new_x, int new_y){
+    // 나아가려는 위치가 직사각형 안에 들어 있는지 확인하고
+    // 들어있다면 아직 방문한적이 없는 곳인지 판단합니다.
+    if(0 <= new_x && new_x < n && \
+            0 <= new_y && new_y < m && \
+            visited[new_x][new_y] == false) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+int main() {
+    // 변수 선언:
+    int n, m;
+    char answer[100][100] = {0}; // 답에 해당하는 알파벳을 적을 배열입니다.
+
+    // 입력:
+    cin >> n >> m;
+    
+    // direction에 따라 바뀌는 (x, y)의 변화량인 dx, dy를 정의합니다.
+    int dx[4] = {0, 1, 0, -1}, dy[4] = {1, 0, -1, 0};
+    int curr_x = 0, curr_y = 0; // 시작은 (0, 0) 입니다.
+    int direction = 0; //0: 오른쪽, 1: 아래쪽, 2: 왼쪽, 3: 위쪽
+
+    // 처음 시작 위치에 초기값을 적습니다.
+    answer[curr_x][curr_y] = 'A';  
+    visited[curr_x][curr_y] = true;
+
+    // n*m개의 알파벳을 적어야 합니다. 
+    for(int i = 1; i < n * m; i++) { // i번째 문자를 어디에 적을지 결정합니다.
+        while(true) { // 나아갈 수 있을때까지 방향을 바꿔가며 확인해봅니다. 
+            // 현재 방향 dir를 기준으로 그 다음 위치 값을 계산합니다.
+            int next_x = curr_x + dx[direction];
+            int next_y = curr_y + dy[direction];
+			// 그 위치로 나아갈 수 있는지 확인합니다.
+            if(CanGo(n, m, next_x, next_y)) {
+                // 나아갈 수 있다면 위치를 갱신해주고 배열에 올바른 값을 채워넣습니다.
+                curr_x = next_x; 
+                curr_y = next_y;
+                visited[curr_x][curr_y] = true;
+                answer[curr_x][curr_y] = (char)(i % 26 + 'A');
+                break;
+            } else {
+                // 나아갈 수 없다면 시계방향으로 90'를 회전하여 
+				// 그 다음 방향을 확인해봐야 합니다.
+                direction = (direction + 1) % 4;
+            }
+        }
+    }
+    
+    // 출력:
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) 
+            cout << answer[i][j] << " ";
+        cout << endl;
+    }
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(NM)
+
+Memory Complexity : O(NM)
+
+
+
+Solution 1에서 canGo 함수를 아래와 같이 바꾸면 어떤 문제가 생길까요?
+
+bool canGo(int n, int m, int next_x, int next_y){
+    if(visited[next_x][next_y] == false \
+            0 <= next_x && next_x < n && \
+            0 <= next_y && next_y < m}
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+next_x가 주어진 범위를 벗어난 경우 (next_x < 0 이거나, next_x > n), 혹은 next_y가 범위를 벗어난 경우 (next_y < 0 이거나, next_y > m) 에 대하여 visited[next_x][next_y]를 접근할 때 에러가 발생하거나 원하지 않는 결과를 얻게될 수 있습니다.
+
+if (cond1 && cond2 && cond3 … && condN) 과 같이 여러개의 조건이 있는 경우, 앞에서부터 순차적으로 각각의 조건을 검사하다가 false인 경우 나머지 조건은 확인하지 않고 해당 if 문을 빠져나옵니다. 예를 들어 cond3 = false인 경우 해당 if문은 cond1~3만 검사를 하고 나머지(cond4 ~ N)은 확인을 하지 않고 빠져나옵니다.
+
+따라서 위와 같이 배열의 크기가 고정되어 있는 경우 해당 인덱스가 배열의 범위에 포함되는지를 먼저 확인해준 뒤 해당 배열을 접근해야만 합니다.

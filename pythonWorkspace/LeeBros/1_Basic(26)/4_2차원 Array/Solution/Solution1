@@ -1,0 +1,90 @@
+Intuition
+원하는 결과를 바로 출력하기보다는 정답을 저장할 별도의 이차원을 활용합니다.
+
+주어진 규칙을 찾아 이차원 배열을 채워나갑니다.
+
+Algorithm
+지그재그 모양이 어떤 규칙을 갖고 있는지를 파악해봅시다.
+
+이 때 열 번호(column)가 0부터 시작했을 때를 기준으로 다음과 같은 규칙을 갖고 있음을 알 수 있습니다.
+
+case 1) 열 번호가 짝수인 경우 : 한 칸씩 내려가며 숫자를 채웁니다.
+
+case 2) 열 번호가 홀수인 경우 : 한 칸씩 올라가며 숫자를 채웁니다.
+
+위의 규칙을 따라 정답을 담을 이차원 배열 answer을 다음과 같은 방법으로 배열을 채워나갈 수 있습니다. (배열을 사용하지 않고 이 문제를 해결하는 것은 무척 어려운 일입니다)
+
+step 1) 열 번호 0부터 m-1까지 1씩 증가해나가며 이차원 배열을 채워나갑니다.
+
+# 변수 선언 및 입력
+n, m = tuple(map(int, input().split()))
+answer = [
+    [0 for _ in range(m)]
+    for _ in range(n)
+]
+
+count = 0
+
+# Step 1:
+for col in range(m):
+    if col % 2 == 0:
+        # Case 1:
+        for row in range(n):
+            answer[row][col] = count
+            count += 1
+    else:
+        # Case 2:
+        for row in range(n - 1, -1, -1):
+            answer[row][col] = count
+            count += 1
+
+# 출력:
+for row in range(n):
+    for col in range(m):
+        print(answer[row][col], end = ' ')
+    print()
+
+
+#include <iostream>
+
+int main() {
+    // 변수 선언:
+    int n, m;
+    int answer[100][100] = {0};
+
+    // 입력:
+    cin >> n >> m;
+    
+    // Step 1:
+    int count = 0;
+    for(int col = 0; col < m; col++) {
+        if (col % 2 == 0){
+            // Case 1:
+            for(int row = 0; row < n; row++){
+                answer[row][col] = count;
+                count++;
+            }
+        }
+        else {
+            // Case 2:
+            for(int row = n - 1; row >= 0; row--){
+                answer[row][col] = count;
+                count++;
+            }
+        }
+    }
+    
+    // 출력:
+    for(int row = 0; row < n; row++) {
+        for(int col = 0; col < m; col++) 
+            cout << answer[row][col] << " ";
+        cout << endl;
+    }
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(N^2)

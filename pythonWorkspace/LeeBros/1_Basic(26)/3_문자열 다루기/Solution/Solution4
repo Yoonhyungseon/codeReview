@@ -1,0 +1,95 @@
+Intuition
+주어진 입력 문자열을 Run-Length 인코딩한 결과를 반환하는 함수를 작성하여 해결합니다.
+
+Algorithm
+images/2021-02-16-04-54-10.png
+
+인코딩한 값을 구하는 것은 aaaa과 같은 문자열 덩어리를 a(curr_char)가 4(num_char)개(a4)와 같이 바꾸는 변환입니다. 즉, 두 개의 변수로 나타낼 수 있습니다. 주어진 입력을 차례대로 읽으면서 다음과 같이 두 변수를 갱신하고 조건에 맞춰 결과값에 기록합니다.
+images/2021-02-16-04-54-21.png
+
+
+현재 읽고 있는 수가 이전의 것과 같으면 num_char를 증가시킵니다. 만약 같지 않다면 curr_char와 num_char로 원하는 값을 결과(curr_sequence) 뒤에 붙이고 두 변수를 다시 초기화합니다.
+
+prev_sequence를 모두 읽은 후, 마지막 숫자 덩어리에 해당하는 값을 curr_sequence에 붙여준 후 반환합니다.
+
+# 변수 선언 및 입력:
+A = input()
+
+
+def run_length_encoding(target):
+    # 이 함수는 input 문자열을 Run-Length-Encoding한 결과를 반환합니다.
+    encoded = ""
+
+    # 입력의 첫번째 값을 읽고 초기화합니다.
+    curr_char = target[0]
+    num_char = 1
+    for traget_char in target[1:]:
+        if traget_char == curr_char:
+            num_char += 1
+        else:
+            # 지금까지 세어온 curr_char와 num_char를 기록합니다.
+            encoded += curr_char
+            encoded += str(num_char)
+    
+            # curr_char와 num_char를 현재 값으로 초기화합니다.
+            curr_char = traget_char
+            num_char = 1
+        
+    # 마지막 덩어리에 해당하는 curr_char와 num_char를 기록합니다.
+    encoded += curr_char
+    encoded += str(num_char)
+    return encoded
+
+
+# 변환
+encoded = run_length_encoding(A)
+print(len(encoded))
+print(encoded)
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string RunLengthEncoding(string input){
+    // 이 함수는 input 문자열을 Run-Length-Encoding한 결과를 반환합니다.
+    string encoded = "";
+
+    // 입력의 첫번째 값을 읽고 초기화합니다.
+    char curr_char = input[0];
+    int num_char = 1;
+    for(int i = 1; i < input.length(); i++){
+        if(input[i] == curr_char){
+            num_char++;
+        } else {
+            // 지금까지 세어온 curr_char와 num_char를 기록합니다.
+            encoded += curr_char;
+            encoded += to_string(num_char);
+            // curr_char와 num_char를 현재 값으로 초기화합니다.
+            curr_char = input[i];
+            num_char = 1;
+        }
+    }
+    // 마지막 덩어리에 해당하는 curr_char와 num_char를 기록합니다.
+    encoded += curr_char;
+    encoded += to_string(num_char);
+    return encoded;
+}
+
+int main() {
+    string A;
+    cin >> A;
+
+    // 변환
+    string encoded = RunLengthEncoding(A);
+
+    cout << (int) encoded.length() << endl << encoded;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N)
+
+Memory Complexity : O(N)

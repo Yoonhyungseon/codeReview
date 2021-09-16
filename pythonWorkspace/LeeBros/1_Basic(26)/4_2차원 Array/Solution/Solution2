@@ -1,0 +1,73 @@
+Intuition
+90도 회전을 하면 회전한 배열의 행과 열이, 기존 배열의 어떤 값과 동일해지는지를 찾아내야 합니다.
+
+Algorithm
+90도 회전시, 회전한 배열의 i번째 행은 기존 배열의 i번째 열이 되고, j번째 열은 기존 배열의 n - j - 1번째 열이 됩니다.
+
+따라서 회전 이후의 배열은 다음과 같이 구성할 수 있습니다.
+
+rotated[i][j] = array[n - j - 1][i] for all 0 <= i,j < n
+
+
+
+# 변수 선언 및 입력:
+n = int(input())
+array = [
+    list(map(int, input().split()))
+    for _ in range(n)
+]
+rotated = [
+    [0 for _ in range(n)]
+    for _ in range(n)
+]
+
+
+# 90도 회전한 배열 rotated[i][j] = array[n - j - 1][i] 이다.
+for i in range(n):
+    for j in range(n):
+        rotated[i][j] = array[n - j - 1][i]
+
+for i in range(n):
+    for j in range(n):
+        print(rotated[i][j], end=" ")
+    print()
+
+
+
+
+
+#include <iostream>
+
+#define MAX_N 200 // 입력값 N의 최대값
+
+using namespace std;
+
+int main() {
+	int n;
+	int array[MAX_N][MAX_N];
+	int rotated[MAX_N][MAX_N];
+	
+	cin >> n;
+	
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < n; j++)
+			cin >> array[i][j];
+	
+    // 90도 회전한 배열 rotated[i][j] == array[n - j - 1][i] 이다.
+	for(int i = 0; i < n; i++)
+		for(int j = 0; j < n; j++)
+			rotated[i][j] = array[n - j - 1][i];
+	
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++)
+			cout << rotated[i][j] << " ";
+		cout << endl;
+	}
+	return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(N^2)

@@ -1,0 +1,135 @@
+Intuition
+배열을 순회하며 가능한 모든 경우에 대하여 탐색합니다.
+
+Algorithm
+배열을 앞에서부터 순회하면서 사는 시점의 후보를 정하고, 남아있는 원소들을 순회하면서 파는 시점의 후보를 정해줍니다. 모든 가능한 쌍에 대해 이익을 구해보고, 그 중 최대인 경우를 답으로 출력합니다.
+
+# 변수 선언 및 입력:
+n = int(input())
+price = list(map(int, input().split()))
+
+# 배열을 앞에서부터 순회하며 사는 시점의 후보를 선택합니다
+max_profit = 0
+for i in range(n):
+    # 사는 시점의 다음 해부터 순회하며 파는 시점의 후보를 선택합니다
+    for j in range(i + 1, n):
+        profit = price[j] - price[i]
+
+        if profit > max_profit:
+            max_profit = profit
+    
+print(max_profit)
+
+
+#include <iostream>
+
+#define MAX_NUM 1000
+
+using namespace std;
+
+int main() {
+    // 변수 선언:
+    int n;
+    int price[MAX_NUM];
+
+    // 입력:
+    cin >> n;
+    for(int i = 0; i < n; i++)
+        cin >> price[i];
+
+    // 배열을 앞에서부터 순회하며 사는 시점의 후보를 선택합니다
+    int max_profit = 0;
+    for(int i = 0; i < n; i++) {
+        // 사는 시점의 다음 해부터 순회하며 파는 시점의 후보를 선택합니다
+        for(int j = i + 1; j < n; j++) {
+			int profit = price[j] - price[i];
+            
+            if(profit > max_profit)
+                max_profit = profit;
+        }
+    }
+
+    cout << max_profit;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(N)
+
+
+
+
+Intuition
+자동차를 파는 시점을 기준으로 그 전에 언제 자동차를 샀어야 하는지를 생각해봅시다. 이익을 최대화 하려면 앞선 자동차 가격 중 최소값을 골라주면 됩니다.
+
+Algorithm
+자동차를 파는 시점을 제일 앞부터 제일 마지막 해까지 순차적으로 가정해보면, 이익이 최대화 될 때는 파는 시점을 기준으로 앞선 해의 최솟값일 때 구매를 했을 때 입니다. 이 때 순회를 하며 구해야 하는 최솟값은 앞선 모든 가격을 다 보지 않고, 이전에 구했던 최솟값을 활용하여 O(1)안에 계산이 가능합니다.
+
+# 변수 선언 및 입력:
+n = int(input())
+price = list(map(int, input().split()))
+
+# 배열을 앞에서부터 순회하며 최소값을 갱신해줍니다.
+# 각 원소에 대하여 해당 시점의 최소값과의 차이가
+# 최대가 될 때를 갱신해줍니다.
+max_profit = 0
+min_price = price[0]
+for i in range(n):
+    profit = price[i] - min_price
+
+    # 답을 갱신해줍니다.
+    if profit > max_profit:
+        max_profit = profit
+
+    # 지금까지의 최솟값을 갱신해줍니다.
+    if min_price > price[i]:
+        min_price = price[i]
+    
+print(max_profit)
+
+
+#include <iostream>
+
+#define MAX_NUM 1000
+
+using namespace std;
+
+int main() {
+    // 변수 선언:
+    int n;
+    int price[MAX_NUM];
+
+    // 입력:
+    cin >> n;
+    for(int i = 0; i < n; i++)
+        cin >> price[i];
+
+    // 배열을 앞에서부터 순회하며 최소값을 갱신해줍니다.
+    // 각 원소에 대하여 해당 시점의 최소값과의 차이가
+    // 최대가 될 때를 갱신해줍니다.
+    int max_profit = 0;
+    int min_price = price[0];
+    for(int i = 0; i < n; i++) {
+        int profit = price[i] - min_price;
+        
+        // 답을 갱신해줍니다.
+        if(profit > max_profit)
+            max_profit = profit;
+        
+        // 지금까지의 최솟값을 갱신해줍니다.
+        if(min_price > price[i])
+            min_price = price[i];
+    }
+
+    cout << max_profit;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N)
+
+Memory Complexity : O(N)

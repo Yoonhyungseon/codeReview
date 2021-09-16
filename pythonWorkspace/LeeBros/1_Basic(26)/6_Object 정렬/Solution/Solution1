@@ -1,0 +1,162 @@
+Intuition
+학생들의 정보(키, 몸무게, 번호)가 기준에 따라 동시에 움직여야 하는 문제이므로 별도의 클래스(Student)를 정의 해줍니다. 또한, 키, 몸무게, 번호에 따라 학생들의 위치가 결정되므로 Custom Comparator를 활용합니다.
+
+Algorithm
+키, 몸무게 그리고 번호에 따라 학생들의 정보가 같이 움직이기 위해 Student라는 별도의 class를 만듭니다. 또, 문제에서 키가 큰 순, 몸무게가 큰 순, 번호는 작은 순으로 정렬하라는 조건이 주어져 있으므로 이를 위해 Custom Comparator를 사용합니다. 이때 두 학생을 비교할 때에는 키를 먼저 비교하고, 키가 같으면 몸무게를, 몸무게도 같으면 번호를 비교하는 식으로 진행합니다.
+
+# 클래스 선언
+class Student:
+    def __init__(self, height, weight, number):
+        self.height, self.weight, self.number = height, weight, number
+
+
+# 변수 선언 및 입력
+n = int(input())
+given_inputs = [
+    tuple(map(int, input().split()))
+    for _ in range(n)
+]
+students = [
+    Student(height, weight, i + 1)
+    for i, (height, weight) in enumerate(given_inputs)
+]
+
+# Custom Comparator를 활용한 정렬
+students.sort(key = lambda x: (-x.height, -x.weight, x.number))
+
+# 출력
+for student in students:
+    print(student.height, student.weight, student.number)
+
+
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+// 학생들의 정보를 나타내는 클래스 선언
+class Student{
+    public:
+        int height;
+        int weight;
+        int number;
+        Student(int height, int weight, int number) {
+            this->height = height;
+            this->weight = weight;
+            this->number = number;
+        }
+};
+
+// Custom Comparator
+bool Cmp(const Student &a, const Student &b) {
+    // 키가 크면 정렬 했을 때 앞에 와야 합니다.
+    if(a.height != b.height)
+        return a.height > b.height;
+    // 몸무게가 크면 정렬 했을 때 앞에 와야합니다.
+    if(a.weight != b.weight)
+        return a.weight > b.weight;
+    // 번호가 작으면 앞에 와야 합니다.
+    return a.number < b.number;
+}
+
+int main(){
+    int n;
+    cin >> n;
+
+    vector<Student> students;
+    for (int i = 0; i < n; i++){
+        int height, weight;
+        cin >> height >> weight;
+        // Student 객체를 생성해 벡터에 추가합니다.
+        students.push_back(Student(height, weight, i+1));
+    }
+
+    // custom comparator를 활용한 정렬
+    sort(students.begin(), students.end(), Cmp);
+
+    // 결과를 출력합니다.
+    for (int i = 0; i < n; i++){
+        cout << students[i].height << " ";
+        cout << students[i].weight << " ";
+        cout << students[i].number << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+Complexity Analysis
+Time Complexity : O(NlgN)
+
+Memory Complexity : O(N)
+
+
+
+
+Intuition
+각 언어에 미리 정의된 세 객체를 하나의 객체처럼 묶어서 사용할 수 있는 자료형을 사용합니다.
+
+Algorithm
+전체적인 알고리즘 자체는 solution 1과 동일합니다. C++ 에서는 std::tuple을, Python 에서는 tuple을 활용하면 별도의 Custom Comparator 없이 정렬을 할 수 있습니다. 이는 각 언어에서 해당 자료형을 정렬할 때 첫 번째 객체를 우선적으로 비교하고, 만약 같은 경우 두 번째 객체, 그래도 같다면 세 번째 객체를 비교하여 정렬해주기 때문입니다. 이러한 자료형을 사용하면 보다 간결한 코드를 짤 수 있습니다. 이때, 기본으로 오름차순 정렬을 해주기 때문에 내림차순 정렬을 위해서는 해당 값을 음수로 변경하여 진행하면 됩니다.
+
+# 변수 선언 및 입력
+n = int(input())
+given_inputs = [
+    tuple(map(int, input().split()))
+    for _ in range(n)
+]
+students = [
+    (height, weight, i + 1)
+    for i, (height, weight) in enumerate(given_inputs)
+]
+
+# Custom Comparator를 활용한 정렬
+students.sort(key = lambda x: (-x[0], -x[1], x[2]))
+
+# 출력
+for height, weight, number in students:
+    print(height, weight, number)
+
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <tuple>
+
+using namespace std;
+
+int main() {
+    // 변수 선언:
+	int n;
+	vector<tuple<int, int, int> > students;
+	
+	// 입력
+	cin >> n;
+	for(int i = 0; i < n; i++) {
+		int h, w;
+		cin >> h >> w;
+		students.push_back(make_tuple(-h, -w, i + 1));
+	}
+	
+	// 정렬:
+	sort(students.begin(), students.end());
+	
+    // 출력:
+	for(int i = 0; i < n; i++) {
+		int h, w, num;
+		tie(h, w, num) = students[i];
+		cout << -h << " " << -w << " " << num << endl;
+	}
+	return 0;
+}
+
+
+
+Complexity Analysis
+Time Complexity : O(NlgN)
+
+Memory Complexity : O(N)

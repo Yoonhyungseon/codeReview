@@ -1,0 +1,196 @@
+Intuition
+In-place로 shift를 하거나 swap을 할 때 필요한 임시 변수를 활용하여 요청을 처리합니다.
+
+Algorithm
+문자열을 앞으로 당기기 위해서는 가장 앞의 문자를 임시 변수에 저장한 뒤, 문자열을 앞부터 순회하며 문자열을 한 칸씩 앞으로 당겨주고 문자열의 제일 뒤에 임시 변수에 저장된 문자를 넣어줍니다.
+images/2021-02-16-04-46-58.png
+문자열을 뒤로 밀기 위해서는 가장 뒤의 문자를 임시 변수에 저장한 뒤, 문자열을 뒤부터 순회하며 문자열을 한 칸씩 뒤로 밀어주고 문자열의 제일 앞에 임시 변수에 저장된 문자를 넣어줍니다.
+images/2021-02-16-04-48-09.png
+
+
+문자열을 좌우로 뒤집기 위해서는 문자열의 절반에 대하여 순회를 하면서 좌우 대칭 위치에 있는 문자와 swap을 해줍니다.
+images/2021-02-16-04-48-50.png
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string input_str;
+int str_size;
+
+void shiftFront() {
+    // step1: 가장 앞의 문자를 저장한 뒤,
+    // step2: 문자열을 앞부터 순회하며 문자를 한 칸씩 앞으로 당기고
+    // step3: 문자열의 제일 뒤에 가장 앞에 있던 문자를 넣어줍니다. 
+    char front = input_str[0];             // step1
+    for(int i = 1; i < str_size; i++)      // step2
+        input_str[i - 1] = input_str[i];
+    input_str[str_size - 1] = front;       // step3
+
+    cout << input_str << endl;
+    return;
+}
+
+void shiftBack() {
+    // step1: 가장 뒤의 문자를 저장한 뒤,
+    // step2: 문자열의 뒤부터 순회하며 문자를 한 칸씩 뒤로 밀어주고
+    // step3: 문자열의 제일 앞에 가장 뒤에 있던 문자를 넣어줍니다. 
+    char back = input_str[str_size - 1];    // step1
+    for(int i = str_size - 1; i >= 1; i--)  // step2
+        input_str[i] = input_str[i - 1];    
+    input_str[0] = back;					// step3
+
+    cout << input_str << endl;
+    return;
+}
+
+void reverse() {
+    // 문자열의 앞부터 순회하며 좌우 대칭 위치에 있는 문자와 swap해줍니다. 
+    // 단, 문자열의 절반만 순회해줍니다. 
+    char temp;
+    for(int i = 0; i < str_size / 2; i++) {
+        temp = input_str[i];
+        input_str[i] = input_str[str_size - i - 1];
+        input_str[str_size - i - 1] = temp;
+    }
+
+    cout << input_str << endl;
+    return;
+}
+
+int main() {
+    int q_num;
+    cin >> input_str >> q_num;
+
+    str_size = input_str.size();
+
+    int q_type;
+    for(int i = 0; i < q_num; i++) {
+        cin >> q_type;
+        if(q_type == 1)
+            shiftFront();
+        else if(q_type == 2)
+            shiftBack();
+        else if(q_type == 3)
+            reverse();
+    }
+
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(NQ)
+
+Memory Complexity : O(N)
+
+
+
+
+Intuition
+언어별로 기본으로 내장되어있는 함수를 활용하여 문제를 해결합니다. 특정 문자열의 부분 문자열을 구하고 문자열 끼리 합치는 과정은 built-in function으로 쉽게 구현 가능합니다.
+
+단, 이 방법은 In-place가 아닙니다.
+
+Algorithm
+문자열을 앞으로 당기기 위해서는 첫 번째 문자를 제외한 부분문자열의 끝에 첫 번째 문자를 추가해주면 됩니다.
+
+문자열을 뒤로 밀기 위해서는 가장 뒤의 문자 뒤에 마지막 문자를 제외한 부분문자열을 추가해주면 됩니다.
+
+문자열을 좌우로 뒤집기 위해서는 뒤집어 주는 함수를 실행하면 됩니다.
+
+
+input_str, q_num = tuple(input().split())
+q_num = int(q_num)
+
+
+def shift_front():
+    global input_str
+    input_str = input_str[1:] + input_str[0]
+    
+    print(input_str)
+
+    
+def shift_back():
+    global input_str
+    input_str = input_str[-1] + input_str[:-1]
+    
+    print(input_str)
+
+
+def reverse():
+    global input_str
+    input_str = input_str[::-1]
+    
+    print(input_str)
+
+
+for _ in range(q_num):
+    q_type = int(input())
+    if q_type == 1:
+        shift_front()
+    elif q_type == 2:
+        shift_back()
+    elif q_type == 3:
+        reverse()
+
+
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+string input_str;
+int str_size;
+
+void shiftFront() {
+    int len = (int) input_str.size();
+    input_str = input_str.substr(1, len) + input_str.substr(0, 1);
+
+    cout << input_str << endl;
+    return;
+}
+
+void shiftBack() {
+    int len = (int) input_str.size();
+    input_str = input_str.substr(len - 1, len) + input_str.substr(0, len - 1);
+
+    cout << input_str << endl;
+    return;
+}
+
+void reverse() {
+    reverse(input_str.begin(), input_str.end());
+
+    cout << input_str << endl;
+    return;
+}
+
+int main() {
+    int q_num;
+    cin >> input_str >> q_num;
+
+    str_size = input_str.size();
+
+    int q_type;
+    for(int i = 0; i < q_num; i++) {
+        cin >> q_type;
+        if(q_type == 1)
+            shiftFront();
+        else if(q_type == 2)
+            shiftBack();
+        else if(q_type == 3)
+            reverse();
+    }
+
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(NQ)
+
+Memory Complexity : O(N)

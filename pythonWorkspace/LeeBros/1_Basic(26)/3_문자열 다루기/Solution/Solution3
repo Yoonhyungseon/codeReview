@@ -1,0 +1,171 @@
+Intuition
+문자열에 포함되어 있는 다른 문자열을 찾고 그 부분을 지우는 함수들을 구현합니다.
+
+Algorithm
+먼저, 어떤 문자열(source)에 다른 문자열(target)이 처음 등장 하는 위치를 반환하는 함수(find)를 작성합니다. 이 함수는 source의 index를 순회하며 해당 index에서 그 다음에 있는 문자들이 target과 같은지 비교합니다. 만약 같으면 그 index를 반환하고, 모든 index를 순회할 때 까지 target을 찾을 수 없을 때는 -1을 반환합니다.
+
+두 번째로, 어떤 문자열(source)의 어떤 위치(pos)부터 특정 개수(count)의 문자를 지운 결과를 반환하는 함수(erase)를 작성합니다. 새로운 문자열을 만들 때, pos 이전의 값들은 그대로 가져오고 pos 이후에는 count만큼 건너뛴 값을 가져와서 pos와 pos+count사이의 문자들을 지웁니다.
+
+main 함수는 입력으로 받은 A에서 B를 찾을 수 없을 때 까지 B를 지우는 것을 반복합니다.
+
+
+# 변수 선언 및 입력:
+A = input()
+B = input()
+
+
+def find(source, target):
+    # source문자열에서 target문자열이 처음 등장하는 위치를 반환합니다.
+
+    # Tip: 우리는 i, i+1, ..., i+target.length()-1을 비교할 것입니다.
+    # 이 때 마지막 위치는 i+target.length()-1 < source.length()를 만족해야
+    # 하므로 i < source.length() - target.length() + 1을 구할 수 있습니다.
+
+    candidates = len(source) - len(target) + 1
+    for i in range(candidates):
+        # i부터 target길이만큼 비교해서 target과 같은지 체크합니다.
+        is_same = True
+        for j in range(len(target)):
+            if source[i + j] != target[j]:
+                is_same = False
+                break
+        if is_same:
+            # 문자열을 찾았으므로 i 반환
+            return i
+        
+    return -1; # 찾지 못한 경우
+
+
+def erase(source, pos, count):
+    # source문자열에서 pos위치에서 count개수만큼의 문자를 지운 문자열을 반환합니다.
+    return source[:pos] + source[pos+count:]
+
+
+while find(A, B) != -1:
+    A = erase(A, find(A, B), len(B))
+
+print(A)
+
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int find(string source, string target) {
+    // source문자열에서 target문자열이 처음 등장하는 위치를 반환합니다.
+
+    // Tip1: 우리는 i, i+1, ..., i+target.length()-1을 비교할 것입니다.
+    // 이 때 마지막 위치는 i+target.length()-1 < source.length()를 만족해야
+    // 하므로 i < source.length() - target.length() + 1을 구할 수 있습니다.
+
+    // Tip2: length는 size_t형이므로 int로 변환해야 음수 값을 처리할 수 있습니다.
+    int candidates = (int)source.length() - (int)target.length() + 1;
+    for(int i = 0; i < candidates; i++) {
+        // i부터 target길이만큼 비교해서 target과 같은지 체크합니다.
+        bool is_same = true;
+        for(int j = 0; j < target.length(); j++) {
+            if(source[i + j] != target[j]) {
+                is_same = false;
+                break;
+            }
+        }
+        if(is_same) {
+            // 문자열을 찾았으므로 i 반환
+            return i;
+        }
+    }
+    return -1; // 찾지 못한 경우
+}
+
+string erase(string source, int pos, int count) {
+    // source문자열에서 pos위치에서 count개수만큼의 문자를 지운 문자열을 반환합니다.
+    string erased_source;
+    // 원래길이 - count만큼의 공간을 사용합니다.
+    int output_length = source.length() - count;
+    erased_source.reserve(output_length);
+    for(int i = 0; i < output_length; i++) {
+        if(i < pos) {
+            // pos 이전이므로 그대로 사용합니다.
+            erased_source += source[i];
+        } else{
+            // count만큼 건너뛴 위치를 사용해줍니다.
+            erased_source += source[i+count];
+        }
+    }
+    return erased_source;
+}
+
+int main() {
+    string A, B;
+    cin >> A;
+    cin >> B;
+
+    while(find(A, B) != -1) {
+        A = erase(A, find(A, B), B.length());
+    }
+
+    cout << A;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(N)
+
+
+
+
+
+
+
+
+Intuition
+built-in 함수를 이용합니다.
+
+Algorithm
+find와 erase를 이용해 A에 B가 포함되지 않을 때 까지 지웁니다.
+
+# 변수 선언 및 입력:
+A = input()
+B = input()
+
+
+# A에서 B를 찾습니다, 찾을 수 없을 때까지 반복합니다.
+while A.find(B) != -1:
+    start_pos = A.find(B)
+    # start_pos부터 len(B)개의 문자를 지웁니다.
+    A = A[:start_pos] + A[start_pos + len(B):]
+
+print(A)
+
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    string A, B;
+    cin >> A;
+    cin >> B;
+
+    // A에서 B를 찾습니다, 찾을 수 없을 때까지 반복합니다.
+    while(A.find(B) != string::npos){
+        int start_pos = A.find(B);
+        // start_pos부터 B.length()개의 문자를 지웁니다.
+        A.erase(start_pos, B.length());
+    }
+
+    cout << A;
+    return 0;
+}
+
+
+Complexity Analysis
+Time Complexity : O(N^2)
+
+Memory Complexity : O(N)
